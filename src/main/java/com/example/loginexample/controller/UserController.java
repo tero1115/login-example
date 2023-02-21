@@ -22,6 +22,22 @@ public class UserController {
     @Autowired
     private HttpSession session;
 
+    @PostMapping("/login")
+    public String login(LoginReqDto loginReqDto) {
+        if (loginReqDto.getUsername() == null || loginReqDto.getUsername().isEmpty()) {
+            throw new CustomException("username을 작성해주세요");
+        }
+        if (loginReqDto.getPassword() == null || loginReqDto.getPassword().isEmpty()) {
+            throw new CustomException("password를 작성해주세요");
+        }
+        User principal = userService.로그인(loginReqDto);
+        if (principal == null) {
+            throw new CustomException("유저네임 혹은 패스워드가 잘못 입력되었습니다");
+        }
+        session.setAttribute("principal", principal);
+        return "redirect:/";
+    }
+
     @PostMapping("/join")
     public String join(JoinReqDto joinReqDto) {
 
