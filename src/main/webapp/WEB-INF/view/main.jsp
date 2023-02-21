@@ -16,7 +16,7 @@
                 <li><a href="/joinForm">회원가입 페이지</a></li>
                 <li><a href="/">메인 페이지</a></li>
             </ul>
-
+            <hr>
             <h1>메인 페이지 입니다</h1>
         </body>
 
