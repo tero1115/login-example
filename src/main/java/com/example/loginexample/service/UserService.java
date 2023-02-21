@@ -9,6 +9,7 @@ import com.example.loginexample.dto.user.UserReq.LoginReqDto;
 import com.example.loginexample.handler.ex.CustomException;
 import com.example.loginexample.model.User;
 import com.example.loginexample.model.UserRepository;
+import com.example.loginexample.util.Sha256;
 
 @Service
 public class UserService {
@@ -17,9 +18,10 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User 로그인(LoginReqDto loginReqDto) {
+        String password = Sha256.hashPassword(loginReqDto.getPassword());
 
         User principal = userRepository.findByUsernameAndPassword(
-                loginReqDto.getUsername(), loginReqDto.getPassword());
+                loginReqDto.getUsername(), password);
         if (principal == null) {
             throw new CustomException("유저네임 혹은 패스워드가 잘못 입력되었습니다");
         }
@@ -32,8 +34,9 @@ public class UserService {
         if (sameUser != null) {
             throw new CustomException("동일한 username이 존재합니다");
         }
+        String password = Sha256.hashPassword(joinReqDto.getPassword());
 
-        int result = userRepository.insert(joinReqDto.getUsername(), joinReqDto.getPassword(), joinReqDto.getEmail());
+        int result = userRepository.insert(joinReqDto.getUsername(), password, joinReqDto.getEmail());
         if (result != 1) {
             throw new CustomException("회원가입실패");
         }
